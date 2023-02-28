@@ -18,8 +18,8 @@ export const LoginScreen = () => {
       password: '',
     },
     validationSchema: yup.object().shape({
-      username: yup.string().required('Campo obligatorio'),
-      password: yup.string().required('Campo obligatorio'),
+      username: yup.string().required('Required field'),
+      password: yup.string().required('Required field'),
     }),
     onSubmit: async (values) => {
       try {
@@ -39,11 +39,11 @@ export const LoginScreen = () => {
         throw Error();
       } catch (err) {
         Alert.fire({
-          title: 'Verificar datos',
-          text: 'Usuario y/o contraseña incorrectos',
+          title: 'Verify data',
+          text: 'User or password incorrect',
           icon: 'error',
           confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Aceptar',
+          confirmButtonText: 'Accept',
         });
       }
     },
@@ -101,14 +101,20 @@ export const LoginScreen = () => {
                           ) : null}
                         </Form.Group>
                         <Form.Group className="form-outline mb-4">
-                          <Form.Label htmlFor="password">Password</Form.Label>
+                          <Form.Label htmlFor="password">
+                            Password
+                          </Form.Label>
                           <Form.Control
                             placeholder="*********"
                             id="password"
+                            type="password"
                             autoComplete="off"
                             name="password"
                             value={formik.values.password}
                             onChange={formik.handleChange}
+                            rightIcon={
+                              <FeatherIcon icon={'eye'} size={20} />
+                            }
                           />
                           {formik.errors.password ? (
                             <span className="error-text">
