@@ -1,16 +1,21 @@
-import React, { useState }from "react";
+import React, { useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { ButtonCircle } from "../../shared/components/ButtonCircle";
 import DataTable from "react-data-table-component";
+import { Loading } from "./../../shared/components/Loading";
 
 export const CategoryScreen = () => {
-
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(second)
-  const [filterText, setFilterText] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [filterText, setFilterText] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Esto es para filtrar las categorias por el nombre que se escribe en el input
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(filterText.toLowerCase())
+  );
 
   return (
     <Card>
@@ -30,11 +35,11 @@ export const CategoryScreen = () => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <DataTable 
+        <DataTable
           columns={[]}
           data={categories}
           progressPending={isLoading}
-          progressComponent={<>LOADING</>}
+          progressComponent={<Loading />}
           noDataComponent={"No data found"}
           pagination
           paginationComponentOptions={{}}
