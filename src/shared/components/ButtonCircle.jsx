@@ -1,5 +1,6 @@
 import React from "react";
-import { FeatherIcon } from "feather-icons-react";
+import FeatherIcon from "feather-icons-react/build/FeatherIcon";
+import "../custom-styles.css";
 
 export const ButtonCircle = ({ type, onClick, icon = "", size = 15 }) => {
   return (
