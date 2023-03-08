@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Badge, Card, Col, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Card, Col, Row, Badge } from "react-bootstrap";
 import { ButtonCircle } from "../../shared/components/ButtonCircle";
 import DataTable from "react-data-table-component";
 import { Loading } from "./../../shared/components/Loading";
-import AxiosClient from "./../../shared/plugins/axios";
 import { FilterComponent } from "./../../shared/components/FilterComponent";
+import AxiosClient from "./../../shared/plugins/axios";
+import { CategoryForm } from "./components/CategoryForm";
+import { EditCategoryForm } from "./components/EditCategoryForm";
 
 const options = {
-  rowsPerPageText: "Categories per page",
-  rangeSeparatorText: "of",
+  rowsPerPageText: "Registros por página",
+  rangeSeparatorText: "de",
 };
-
 export const CategoryScreen = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
   const [filterText, setFilterText] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,40 +25,36 @@ export const CategoryScreen = () => {
     category.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await AxiosClient({ url: "/category" });
-        if (!data.error) setCategories(data.data);
-      } catch (error) {
-        console.log("Error -> CategoryScreen.jsx -> fetchData -> ", error);
-        // TODO: Handle error
-      } finally {
+  const getCategories = async () => {
+    try {
+      setIsLoading(true);
+      const data = await AxiosClient({ url: "/category/" });
+      if (!data.error) {
+        setCategories(data.data);
         setIsLoading(false);
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      //Poner alerta del error
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    getCategories();
   }, []);
 
-  // Esto es para que el filtro se actualice cada vez que se escribe en el input y no todas las veces que se renderiza el componente
-  const headerComponent = React.useMemo(() => {
+  const HeaderComponent = React.useMemo(() => {
     const handleClear = () => {
-      if (filterText) {
-        setFilterText("");
-      }
-      return (
-        <FilterComponent
-          onFilter={(event) => setFilterText(event.target.value)}
-          onClear={handleClear}
-          filterText={filterText}
-        />
-      );
+      if (filterText) setFilterText("");
     };
+    return (
+      <FilterComponent
+        onFilter={(e) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
+    );
   }, [filterText]);
 
-  // Cabecera de la tabla
   const columns = React.useMemo(() => [
     {
       name: "#",
@@ -65,24 +62,24 @@ export const CategoryScreen = () => {
       sortable: true,
     },
     {
-      name: "Category",
+      name: "Categoria",
       cell: (row) => <div>{row.name}</div>,
       sortable: true,
       selector: (row) => row.name,
     },
     {
-      name: "Status",
+      name: "Estado",
       cell: (row) =>
         row.status ? (
-          <Badge bg="success">Active</Badge>
+          <Badge bg="success">Activo</Badge>
         ) : (
-          <Badge bg="danger">Inactive</Badge>
+          <Badge bg="danger">Inactivo</Badge>
         ),
       sortable: true,
       selector: (row) => row.status,
     },
     {
-      name: "Actions",
+      name: "Acciones",
       cell: (row) => (
         <>
           <ButtonCircle
@@ -98,13 +95,13 @@ export const CategoryScreen = () => {
             <ButtonCircle
               icon="trash-2"
               type={"btn btn-outline-danger btn-circle"}
-              size={16}
               onClick={() => {}}
+              size={16}
             />
           ) : (
             <ButtonCircle
-              icon="refresh-cw"
-              type={"btn btn-outline-primary btn-circle"}
+              icon="pocket"
+              type={"btn btn-outline-success btn-circle"}
               size={16}
               onClick={() => {}}
             />
@@ -124,9 +121,18 @@ export const CategoryScreen = () => {
               type={"btn btn-outline-success"}
               icon={"plus"}
               size={16}
-              onClick={() => {
-                console.log("Add Category");
-              }}
+              onClick={() => setIsOpen(true)}
+            />
+            <CategoryForm
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              setCategories={setCategories}
+            />
+            <EditCategoryForm
+              isOpen={isEditing}
+              onClose={() => setIsEditing(false)}
+              category={selectedCategory}
+              setCategories={setCategories}
             />
           </Col>
         </Row>
@@ -137,11 +143,11 @@ export const CategoryScreen = () => {
           data={filteredCategories}
           progressPending={isLoading}
           progressComponent={<Loading />}
-          noDataComponent={"No categories found"}
+          noDataComponent={"No data found"}
           pagination
           paginationComponentOptions={options}
           subHeader
-          subHeaderComponent={headerComponent}
+          subHeaderComponent={HeaderComponent}
           persistTableHead
           striped={true}
           highlightOnHover={true}

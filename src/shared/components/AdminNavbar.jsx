@@ -1,11 +1,19 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useContext, useNavigate } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Button } from "react-bootstrap";
+import { AuthContext } from "../../modules/auth/authContext";
 
 export const AdminNavbar = () => {
+  const { dispatch } = useContext(AuthContext); // dispatch is a function that will be used to update the state
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/auth", { replace: true }); // replace: true will remove the current page from the history stack
+  };
+
   return (
     <Navbar bg="light" variant="light" sticky="top">
       <Container>
@@ -21,7 +29,9 @@ export const AdminNavbar = () => {
             Subcategories
           </Link>
         </Nav>
-        <Button variant="primary">Log Out</Button>
+        <Button variant="primary" onClick={handleLogout}>
+          Log Out
+        </Button>
       </Container>
     </Navbar>
   );
