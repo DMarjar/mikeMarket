@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Badge } from "react-bootstrap";
 import { ButtonCircle } from "../../shared/components/ButtonCircle";
 import DataTable from "react-data-table-component";
-import { Loading } from "./../../shared/components/Loading";
-import { FilterComponent } from "./../../shared/components/FilterComponent";
-import AxiosClient from "./../../shared/plugins/axios";
-import { CategoryForm } from "./components/CategoryForm";
+import { Loading } from "../../shared/components/Loading";
+import { FilterComponent } from "../../shared/components/FilterComponent";
+import AxiosClient from "../../shared/plugins/axios";
+import { CategoryForm } from "./components/SubcategoryForm";
 import { EditCategoryForm } from "./components/EditCategoryForm";
 
 const options = {
@@ -18,7 +18,7 @@ export const CategoryScreen = () => {
   const [filterText, setFilterText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedCategoryStatus, setSelectedCategoryStatus] = useState(null);
+  const [setSelectedCategoryStatus] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   // Esto es para filtrar las categorias por el nombre que se escribe en el input
@@ -95,8 +95,14 @@ export const CategoryScreen = () => {
           {row.status ? (
             <>
               <ButtonCircle
-                icon="pocket"
+                icon="trash-2"
                 type={"btn btn-outline-danger btn-circle"}
+                onClick={() => {}}
+                size={16}
+              />
+              <ButtonCircle
+                icon="pocket"
+                type={"btn btn-outline-success btn-circle"}
                 size={16}
                 onClick={() => {
                   setSelectedCategory(row);

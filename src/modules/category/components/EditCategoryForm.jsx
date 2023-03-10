@@ -3,7 +3,8 @@ import { useFormik } from "formik";
 import { Button, Col, Row, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
 import AxiosClient from "../../../shared/plugins/axios";
-import FeatherIcon from "feather-icons-react";
+import FeatherIcon from "feather-icons-react/build/FeatherIcon";
+
 import Alert, {
   confirmMsj,
   confirmTitle,
@@ -29,8 +30,8 @@ export const EditCategoryForm = ({
     validationSchema: yup.object().shape({
       name: yup
         .string()
-        .required("El nombre es de awuebo")
-        .min(4, "El nombre es de 4 caracteres"),
+        .required("El nombre es obligatorio")
+        .min(4, "El nombre debe tener al menos 4 caracteres"),
     }),
     onSubmit: async (values) => {
       console.log(values);
@@ -50,8 +51,8 @@ export const EditCategoryForm = ({
         preConfirm: async () => {
           try {
             const response = await AxiosClient({
-              method: "POST",
-              url: "/category/",
+              method: "PUT",
+              url: `/category/${category.id}`,
               data: JSON.stringify(values),
             });
             if (!response.error) {
@@ -133,7 +134,11 @@ export const EditCategoryForm = ({
                   <FeatherIcon icon="x" />
                   &nbsp;Cancelar
                 </Button>
-                <Button className="me-2" variant="outline-success">
+                <Button
+                  className="me-2"
+                  variant="outline-success"
+                  type="submit"
+                >
                   <FeatherIcon icon="save" />
                   &nbsp;Guardar
                 </Button>

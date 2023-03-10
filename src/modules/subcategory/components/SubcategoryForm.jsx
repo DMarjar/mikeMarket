@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { Button, Col, Row, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
 import AxiosClient from "../../../shared/plugins/axios";
-import FeatherIcon from "feather-icons-react/build/FeatherIcon";
+import FeatherIcon from "feather-icons-react";
 
 import Alert, {
   confirmMsj,
@@ -121,11 +121,7 @@ export const CategoryForm = ({ isOpen, setCategories, onClose }) => {
                   <FeatherIcon icon="x" />
                   &nbsp;Cancelar
                 </Button>
-                <Button
-                  className="me-2"
-                  variant="outline-success"
-                  onClick={form.handleSubmit}
-                >
+                <Button className="me-2" variant="outline-success">
                   <FeatherIcon icon="save" />
                   &nbsp;Guardar
                 </Button>
